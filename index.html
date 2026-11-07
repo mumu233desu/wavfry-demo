@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WavFry: Noise-Robust Phonation Detection Demonstrations</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Sticky Navigation Bar -->
+  <nav class="sticky-nav">
+    <div class="nav-container">
+      <ul class="nav-links">
+        <li><a href="#archetypes">1. Phonation Types</a></li>
+        <li><a href="#degradation-matrix">2. Degradation & Detection Matrix</a></li>
+      </ul>
+      <div class="theme-switch" role="group" aria-label="Theme mode switcher">
+        <button type="button" class="theme-switch-btn active" data-theme-val="light" title="Light theme" aria-label="Light mode">☀️ Light</button>
+        <button type="button" class="theme-switch-btn" data-theme-val="dark" title="Dark theme" aria-label="Dark mode">🌙 Dark</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main-sheet">
+
+    <!-- Hero Header -->
+    <header class="hero">
+      <div class="header-meta-row">
+        <div>
+          Corpus: <strong>CS-Dialogue</strong> &bull; Environmental Noise: <strong>QUT-NOISE Matrix</strong>
+        </div>
+        <div>
+          <a href="https://github.com/mumu233desu/WavFry" target="_blank" rel="noopener noreferrer">
+            GitHub Repository &rarr;
+          </a>
+        </div>
+      </div>
+
+      <h1 class="paper-title">
+        <span class="highlight">WavFry</span>: Noise-Robust Phonation Detection and Representation Auditing in Conversational Speech
+      </h1>
+
+      <div class="paper-subtitle">
+        An Interactive Research Companion to Acoustic Phonation Regimes and Degradation Robustness
+      </div>
+    </header>
+
+    <!-- SECTION 1: ARCHETYPES -->
+    <section id="archetypes" class="demo-section">
+      <h2 class="section-title">
+        <span>1. Phonation Types &amp; Acoustic Spectrograms</span>
+      </h2>
+      <p class="section-intro">
+        Synchronized 0–4 kHz narrowband spectrograms across four prototypical glottal phonation regimes in conversational speech.
+      </p>
+
+      <div class="archetype-list">
+        <!-- 1. Modal Row (Female) -->
+        <div class="archetype-row">
+          <div class="archetype-col-info">
+            <div class="archetype-info">
+              <h3>Modal Voice (Female) <span class="archetype-badge">[Reference]</span></h3>
+              <p>Regular periodic voicing (F0 &approx; 252 Hz).</p>
+            </div>
+            <div class="audio-widget">
+              <audio controls preload="none">
+                <source src="audio/cat01_archetype_modal_female.mp3" type="audio/mpeg">
+                <source src="audio/cat01_archetype_modal.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          </div>
+          <div class="archetype-col-spec">
+            <div class="spec-image-wrap">
+              <img src="img/cat01_spec_modal_female.webp" alt="Modal Voice Female 0-4 kHz Spectrogram" loading="lazy">
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Modal Row (Male) -->
+        <div class="archetype-row">
+          <div class="archetype-col-info">
+            <div class="archetype-info">
+              <h3>Modal Voice (Male) <span class="archetype-badge">[Reference]</span></h3>
+              <p>Dense harmonic structure across formants (F0 &approx; 190 Hz).</p>
+            </div>
+            <div class="audio-widget">
+              <audio controls preload="none">
+                <source src="audio/cat01_archetype_modal_male.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          </div>
+          <div class="archetype-col-spec">
+            <div class="spec-image-wrap">
+              <img src="img/cat01_spec_modal_male.webp" alt="Modal Voice Male 0-4 kHz Spectrogram" loading="lazy">
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Creaky Row -->
+        <div class="archetype-row">
+          <div class="archetype-col-info">
+            <div class="archetype-info">
+              <h3 style="color: var(--accent);">Creaky Voice / Vocal Fry <span class="archetype-badge target">[Target Event]</span></h3>
+              <p>Vocal fry on "physics" with period doubling.</p>
+            </div>
+            <div class="audio-widget">
+              <audio controls preload="none">
+                <source src="audio/cat01_archetype_creaky.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          </div>
+          <div class="archetype-col-spec">
+            <div class="spec-image-wrap">
+              <img src="img/cat01_spec_creaky.webp" alt="Creaky Voice 0-4 kHz Spectrogram" loading="lazy">
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Breathy Row -->
+        <div class="archetype-row">
+          <div class="archetype-col-info">
+            <div class="archetype-info">
+              <h3>Breathy Voice <span class="archetype-badge target">[Target Event]</span></h3>
+              <p>Incomplete glottal closure with aspiration noise (&gt; 1.5 kHz).</p>
+            </div>
+            <div class="audio-widget">
+              <audio controls preload="none">
+                <source src="audio/cat01_archetype_breathy.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          </div>
+          <div class="archetype-col-spec">
+            <div class="spec-image-wrap">
+              <img src="img/cat01_spec_breathy.webp" alt="Breathy Voice 0-4 kHz Spectrogram" loading="lazy">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: ACOUSTIC DEGRADATION MATRIX & CONTINUOUS DETECTION -->
+    <section id="degradation-matrix" class="demo-section">
+      <h2 class="section-title">
+        <span>2. Acoustic Degradation &amp; Continuous Detection Matrix</span>
+      </h2>
+      <p class="section-intro">
+        Continuous boundary localization across 5 noise scenarios (15, 5, 0 dB SNR) and compound reverberation. Click any cell or play audio to inspect Figure 2.
+      </p>
+
+      <!-- Clean Baseline Card -->
+      <div class="baseline-card active-cell" id="clean-card" data-cond="clean">
+        <div>
+          <div class="baseline-title">
+            <span>Clean Speech Reference</span>
+            <span class="archetype-badge">[Pristine Benchmark]</span>
+          </div>
+          <div class="baseline-sub">Original speech before degradation (3.50s | 16 kHz) — Pristine benchmark</div>
+        </div>
+        <div>
+          <audio controls preload="none">
+            <source src="audio/deg_clean.mp3" type="audio/mpeg">
+          </audio>
+        </div>
+      </div>
+
+      <!-- Full 5-Scenario Booktabs Audio Matrix Table -->
+      <div class="matrix-container">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th style="width: 25%;">Acoustic Scenario</th>
+              <th style="width: 25%;">Mild (15 dB SNR)</th>
+              <th style="width: 25%;">Moderate (5 dB SNR)</th>
+              <th style="width: 25%;">Severe (0 dB SNR)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 1. Cafeteria -->
+            <tr>
+              <td>
+                <span class="scenario-name">Cafeteria / Restaurant</span>
+                <span class="scenario-sub">Babble &amp; cutlery noise</span>
+              </td>
+              <td>
+                <div class="audio-cell" data-cond="cafe_15db" title="Click to inspect Cafeteria 15 dB">
+                  <div class="audio-cell-label"><span>Cafe 15 dB</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_cafe_15db.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+              <td>
+                <div class="audio-cell" data-cond="cafe_5db" title="Click to inspect Cafeteria 5 dB">
+                  <div class="audio-cell-label"><span>Cafe 5 dB</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_cafe_5db.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+              <td>
+                <div class="audio-cell" data-cond="cafe_0db" title="Click to inspect Cafeteria 0 dB">
+                  <div class="audio-cell-label"><span>Cafe 0 dB</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_cafe_0db.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 2. Urban Street -->
+            <tr>
+              <td>
+                <span class="scenario-name">Urban Street</span>
+                <span class="scenario-sub">Traffic &amp; engine noise</span>
+              </td>
+              <td>
+                <div class="audio-cell" data-cond="street_15db" title="Click to inspect Urban Street 15 dB">
+                  <div class="audio-cell-label"><span>Street 15 dB</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_street_15db.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+              <td>
+                <div class="audio-cell" data-cond="street_5db" title="Click to inspect Urban Street 5 dB">
+                  <div class="audio-cell-label"><span>Street 5 dB</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_street_5db.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+              <td>
+                <div class="audio-cell" data-cond="street_0db" title="Click to inspect Urban Street 0 dB">
+                  <div class="audio-cell-label"><span>Street 0 dB</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_street_0db.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 3. Vehicle Cabin -->
+            <tr>
+              <td>
+                <span class="scenario-name">Vehicle Cabin</span>
+                <span class="scenario-sub">Chassis &amp; road rumble (&lt;200 Hz)</span>
+              </td>
+              <td>
+                <div class="audio-cell" data-cond="car_15db" title="Click to inspect Vehicle Cabin 15 dB">
+                  <div class="audio-cell-label"><span>Car 15 dB</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_car_15db.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+              <td>
+                <div class="audio-cell" data-cond="car_5db" title="Click to inspect Vehicle Cabin 5 dB">
+                  <div class="audio-cell-label"><span>Car 5 dB</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_car_5db.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+              <td>
+                <div class="audio-cell" data-cond="car_0db" title="Click to inspect Vehicle Cabin 0 dB">
+                  <div class="audio-cell-label"><span>Car 0 dB</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_car_0db.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 4. Domestic Home -->
+            <tr>
+              <td>
+                <span class="scenario-name">Domestic Home</span>
+                <span class="scenario-sub">Home ambient noise</span>
+              </td>
+              <td>
+                <div class="audio-cell" data-cond="home_15db" title="Click to inspect Domestic Home 15 dB">
+                  <div class="audio-cell-label"><span>Home 15 dB</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_home_15db.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+              <td>
+                <div class="audio-cell" data-cond="home_5db" title="Click to inspect Domestic Home 5 dB">
+                  <div class="audio-cell-label"><span>Home 5 dB</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_home_5db.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+              <td>
+                <div class="audio-cell" data-cond="home_0db" title="Click to inspect Domestic Home 0 dB">
+                  <div class="audio-cell-label"><span>Home 0 dB</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_home_0db.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 5. Reverberant Space -->
+            <tr>
+              <td>
+                <span class="scenario-name">Reverberant Space</span>
+                <span class="scenario-sub">Room reflections &amp; late reverb</span>
+              </td>
+              <td>
+                <div class="audio-cell" data-cond="reverb_15db" title="Click to inspect Reverberant Space 15 dB">
+                  <div class="audio-cell-label"><span>Reverb 15 dB</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_reverb_15db.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+              <td>
+                <div class="audio-cell" data-cond="reverb_5db" title="Click to inspect Reverberant Space 5 dB">
+                  <div class="audio-cell-label"><span>Reverb 5 dB</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_reverb_5db.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+              <td>
+                <div class="audio-cell" data-cond="reverb_0db" title="Click to inspect Reverberant Space 0 dB">
+                  <div class="audio-cell-label"><span>Reverb 0 dB</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_reverb_0db.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Compound Subheader Row -->
+            <tr class="compound-row">
+              <td colspan="4">Compound Degradation Conditions (Spatial RIR + 15 dB Additive Noise)</td>
+            </tr>
+
+            <!-- Vehicle Cabin Compound -->
+            <tr>
+              <td>
+                <span class="scenario-name">Vehicle Cabin Compound</span>
+                <span class="scenario-sub">In-Car spatial RIR + 15 dB noise</span>
+              </td>
+              <td colspan="3">
+                <div class="audio-cell" data-cond="car_compound" title="Click to inspect Vehicle Cabin Compound">
+                  <div class="audio-cell-label"><span>In-Car Spatial RIR Convolution + 15 dB Cabin Noise</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_car_compound.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Room Reverb Compound -->
+            <tr>
+              <td>
+                <span class="scenario-name">Room Reverberation Compound</span>
+                <span class="scenario-sub">Large room RIR + 15 dB noise</span>
+              </td>
+              <td colspan="3">
+                <div class="audio-cell" data-cond="reverb_compound" title="Click to inspect Room Reverberation Compound">
+                  <div class="audio-cell-label"><span>Room Reverberation Spatial RIR Convolution + 15 dB Reverb Noise</span><span class="dur">3.50s</span></div>
+                  <audio controls preload="none">
+                    <source src="audio/deg_reverb_compound_15db.mp3" type="audio/mpeg">
+                  </audio>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Synchronized Figure 2 Inspector Plate -->
+      <div class="plate-card" id="degradation-inspector">
+        <div class="plate-header">
+          <div class="plate-title">Figure 2: Time-Synchronized Acoustic &amp; Continuous Detection Inspector</div>
+          <div class="plate-condition" id="inspector-cond-display">Clean Speech Reference (Pristine)</div>
+        </div>
+        <div class="plate-image">
+          <img id="inspector-img" src="img/deg_inspect_clean.webp" alt="Acoustic Degradation &amp; Detection Alignment">
+        </div>
+        <p class="plate-caption">
+          <strong>Figure 2:</strong> Synchronized 0–4 kHz narrowband spectrogram (top), manual word segmentation (middle, red indicates creak), and continuous creak posterior probabilities P(Creak) across models (bottom).
+        </p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>
+        WavFry Research Project &bull; Speech audio samples from CS-Dialogue and QUT-NOISE, provided for academic evaluation &bull; <a href="https://github.com/mumu233desu/WavFry" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: none;">GitHub Repository</a>
+      </p>
+    </footer>
+
+  </div>
+
+  <!-- Interactive Inspector & Theme Script -->
+  <script>
+    // 1. Theme Switcher (Segmented Control + Persistence)
+    function getInitialTheme() {
+      const saved = localStorage.getItem("wavfry_theme");
+      if (saved) return saved;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      localStorage.setItem("wavfry_theme", theme);
+      document.querySelectorAll(".theme-switch-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-theme-val") === theme);
+      });
+    }
+
+    applyTheme(getInitialTheme());
+
+    document.querySelectorAll(".theme-switch-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        applyTheme(btn.getAttribute("data-theme-val"));
+      });
+    });
+
+    // 2. 18 Dedicated Acoustic & Model Inspection Dictionary
+    const condData = {
+      clean: {
+        title: "Clean Speech Reference (Pristine)",
+        img: "img/deg_inspect_clean.webp"
+      },
+      cafe_15db: {
+        title: "Cafeteria / Restaurant (15 dB SNR)",
+        img: "img/deg_inspect_cafe_15db.webp"
+      },
+      cafe_5db: {
+        title: "Cafeteria / Restaurant (5 dB SNR)",
+        img: "img/deg_inspect_cafe_5db.webp"
+      },
+      cafe_0db: {
+        title: "Cafeteria / Restaurant (0 dB SNR Challenge)",
+        img: "img/deg_inspect_cafe_0db.webp"
+      },
+      street_15db: {
+        title: "Urban Street (15 dB SNR)",
+        img: "img/deg_inspect_street_15db.webp"
+      },
+      street_5db: {
+        title: "Urban Street (5 dB SNR)",
+        img: "img/deg_inspect_street_5db.webp"
+      },
+      street_0db: {
+        title: "Urban Street (0 dB SNR Challenge)",
+        img: "img/deg_inspect_street_0db.webp"
+      },
+      car_15db: {
+        title: "Vehicle Cabin (15 dB SNR)",
+        img: "img/deg_inspect_car_15db.webp"
+      },
+      car_5db: {
+        title: "Vehicle Cabin (5 dB SNR)",
+        img: "img/deg_inspect_car_5db.webp"
+      },
+      car_0db: {
+        title: "Vehicle Cabin (0 dB SNR Challenge)",
+        img: "img/deg_inspect_car_0db.webp"
+      },
+      home_15db: {
+        title: "Domestic Home (15 dB SNR)",
+        img: "img/deg_inspect_home_15db.webp"
+      },
+      home_5db: {
+        title: "Domestic Home (5 dB SNR)",
+        img: "img/deg_inspect_home_5db.webp"
+      },
+      home_0db: {
+        title: "Domestic Home (0 dB SNR Challenge)",
+        img: "img/deg_inspect_home_0db.webp"
+      },
+      reverb_15db: {
+        title: "Reverberant Space (15 dB SNR)",
+        img: "img/deg_inspect_reverb_15db.webp"
+      },
+      reverb_5db: {
+        title: "Reverberant Space (5 dB SNR)",
+        img: "img/deg_inspect_reverb_5db.webp"
+      },
+      reverb_0db: {
+        title: "Reverberant Space (0 dB SNR Challenge)",
+        img: "img/deg_inspect_reverb_0db.webp"
+      },
+      car_compound: {
+        title: "Vehicle Cabin Compound (Spatial RIR + 15 dB Noise)",
+        img: "img/deg_inspect_car_compound.webp"
+      },
+      reverb_compound: {
+        title: "Room Reverberation Compound (Spatial RIR + 15 dB Noise)",
+        img: "img/deg_inspect_reverb_compound.webp"
+      }
+    };
+
+    function setInspectorCondition(condKey) {
+      if (!condData[condKey]) return;
+      const data = condData[condKey];
+      
+      const title = document.getElementById("inspector-cond-display");
+      if (title) title.textContent = data.title;
+      
+      const img = document.getElementById("inspector-img");
+      if (img) img.src = data.img;
+
+      // Update active states
+      document.querySelectorAll(".audio-cell, .baseline-card").forEach(cell => {
+        cell.classList.toggle("active-cell", cell.getAttribute("data-cond") === condKey);
+      });
+    }
+
+    function initMatrixInteraction() {
+      // 1. Matrix cell click: clicking cell or label activates that condition
+      document.querySelectorAll(".audio-cell, .baseline-card").forEach(cell => {
+        cell.addEventListener("click", () => {
+          const cond = cell.getAttribute("data-cond");
+          if (cond) setInspectorCondition(cond);
+        });
+      });
+
+      document.querySelectorAll(".audio-cell-label").forEach(label => {
+        label.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const cell = label.closest(".audio-cell");
+          if (cell) {
+            const cond = cell.getAttribute("data-cond");
+            if (cond) setInspectorCondition(cond);
+          }
+        });
+      });
+
+      // 2. Audio play listener: playing ANY audio auto-selects its condition figure
+      document.querySelectorAll("#degradation-matrix audio").forEach(audio => {
+        audio.addEventListener("play", () => {
+          const cell = audio.closest(".audio-cell, .baseline-card");
+          if (cell) {
+            const cond = cell.getAttribute("data-cond");
+            if (cond) setInspectorCondition(cond);
+          }
+        });
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initMatrixInteraction);
+    } else {
+      initMatrixInteraction();
+    }
+  </script>
+
+</body>
+</html>
